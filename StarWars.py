@@ -8,7 +8,7 @@ from PyQt5.QtGui import QPainter, QColor
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('StarWarsui.ui', self)
+        #uic.loadUi('StarWarsui.ui', self)
         self.initUI()
 
     def initUI(self):
