@@ -21,7 +21,8 @@ class StarWars(QMainWindow):
         self.resize(750, 800)
         self.center()
         self.setWindowTitle('StarWars')
-        self.setStyleSheet("background-image:url(\"fone.jpg\"); background-position: center;" )
+
+        #self.setStyleSheet("background-image:url(\"fone.jpg\"); background-position: center;" )
         self.show()
 
     def center(self):
