@@ -1,36 +1,33 @@
-import sys, random
+import sys
 
-from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QLabel, QWidget
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
-from PyQt5.QtGui import QPainter, QColor
+from PyQt5.QtGui import QPainter, QColor, QPixmap
+
 
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
-        #uic.loadUi('StarWarsui.ui', self)
         self.initUI()
 
     def initUI(self):
-
-        #self.stars = Stars(self)
-        #self.setCentralWidget(self.stars)
-
-        #self.stars.start()
-
-        self.resize(750, 800)
-        self.center()
         self.setWindowTitle('StarWars')
-
-        #self.setStyleSheet("background-image:url(\"fone.jpg\"); background-position: center;" )
+        self.resize(750, 800)  # Размеры окна
+        self.center()  # Центрируем игру
+        self.fone()  # Постановка фона
         self.show()
 
-    def center(self):
+    def fone(self):  # Создали лейбл, наложили как фон
+        label = QLabel(self)
+        label.resize(750, 800)
+        stars = QPixmap('fone.jpg')
+        label.setPixmap(stars)
+
+    def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
         self.move((screen.width()-size.width())/2,
             (screen.height()-size.height())/2)
-
 
 
 app = QApplication(sys.argv)
