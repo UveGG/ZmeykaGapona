@@ -26,8 +26,7 @@ class StarWars(QMainWindow):
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
-        self.move((screen.width()-size.width())/2,
-            (screen.height()-size.height())/2)
+        self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
 
 
 app = QApplication(sys.argv)
