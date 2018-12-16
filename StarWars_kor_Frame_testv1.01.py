@@ -16,7 +16,7 @@ class StarWars(QMainWindow):
         self.setWindowTitle('StarWars')
         self.resize(750, 800)  # Размеры окна
         self.center()  # Центрируем игру
-        #self.fone()  # Постановка фона
+        self.fone()  # Постановка фона
 
         #решение вопроса с фреймом
         #-self.kor = QtWidgets.QFrame(self.centralwidget)
@@ -27,14 +27,9 @@ class StarWars(QMainWindow):
 
         self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))
 
-        #self.spaceship.setStyleSheet("background-color: red")
+        self.spaceship.setStyleSheet("background-color: red")
 
         #self.spaceship.setStyleSheet("background-image: url(:/truck/test_spaceship_v2.png);background-repeat: no-repeat; ")
-
-        #self.spaceship.setFrameStyle(QFrame::StyledPanel)
-
-        #self.spaceship.setStyleSheet("background-image: url(C:\Yandex_L\ZmeykaGapona\test_spaceship_v2.png)")
-        #self.spaceship.setStyleSheet("background:black;background-position: center; background-image: url(:/truck/test_spaceship_v2.png);background-repeat: no-repeat; ")
 
         self.show()
 
