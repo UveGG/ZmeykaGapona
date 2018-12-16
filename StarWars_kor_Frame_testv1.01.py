@@ -43,6 +43,34 @@ class StarWars(QMainWindow):
         size = self.geometry()
         self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_W:
+            if self.y_ss > 0:
+                self.y_ss = self.y_ss - 10
+                self.x_ss = self.x_ss
+                self.spaceship.move(self.x_ss, self.y_ss)
+                self.repaint()
+
+        if event.key() == Qt.Key_S:
+            if self.y_ss < 750:
+                self.y_ss = self.y_ss + 10
+                self.x_ss = self.x_ss
+                self.spaceship.move(self.x_ss, self.y_ss)
+                self.repaint()
+
+        if event.key() == Qt.Key_A:
+            if self.x_ss > 0:
+                self.x_ss = self.x_ss - 10
+                self.y_ss = self.y_ss
+                self.spaceship.move(self.x_ss, self.y_ss)
+                self.repaint()
+
+        if event.key() == Qt.Key_D:
+            if self.x_ss < 700:
+                self.x_ss = self.x_ss + 10
+                self.y_ss = self.y_ss
+                self.spaceship.move(self.x_ss, self.y_ss)
+                self.repaint()
 
 app = QApplication(sys.argv)
 ex = StarWars()
