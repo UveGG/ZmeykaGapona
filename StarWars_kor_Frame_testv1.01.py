@@ -18,23 +18,20 @@ class StarWars(QMainWindow):
         self.center()  # Центрируем игру
         self.fone()  # Постановка фона
 
-        #решение вопроса с фреймом
-        #-self.kor = QtWidgets.QFrame(self.centralwidget)
+
         self.x_ss = 350
-        self.y_ss = 350
-        self.spaceship = QFrame(self)
-        #self.spaceship.setGeometry(self.x_ss, self.y_ss, 50, 50)
+        self.y_ss = 700
+        self.spaceship = QFrame(self) #Создаём фрейм с кординатами x_ss и y_ss
 
-        self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))
+
+        self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50)) #Накладываем на фрейм картинку корабля
         self.spaceship.setStyleSheet("background-image: url(test_spaceship_v2.png);")
-        #self.spaceship.setStyleSheet("background-color: red")
-        #self.spaceship.setStyleSheet("background-image: url(:/truck/test_spaceship_v2.png)")
-        #self.spaceship.setStyleSheet("background-image: url(:/truck/test_spaceship_v2.png);background-repeat: no-repeat; ")
-
-        self.show()
 
 
-        #-----------------------------------------------
+        self.show() # Обновляем экран
+
+
+
     def fone(self):  # Создали лейбл, наложили как фон
         label = QLabel(self)
         label.resize(750, 800)
