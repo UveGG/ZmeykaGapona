@@ -7,6 +7,8 @@ from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor, QPixmap
 
 
+
+
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -20,9 +22,17 @@ class StarWars(QMainWindow):
         self.show()
         #решение вопроса с фреймом
         #-self.kor = QtWidgets.QFrame(self.centralwidget)
-
+        self.x_ss = 350
+        self.y_ss = 700
         self.spaceship = QFrame(self)
-        self.spaceship.setGeometry(QtCore.QRect(350, 700, 50, 50))
+        self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))
+
+
+        #self.spaceship.setFrameStyle(QFrame::StyledPanel);
+
+        #self.spaceship.setStyleSheet("background-image: url(C:\Yandex_L\ZmeykaGapona\test_spaceship_v2.png)")
+        #self.spaceship.setStyleSheet("background:black;background-position: center; background-image: url(:/truck/image.png);background-repeat: no-repeat; ")
+        self.show()
 
         #-self.kor.setAutoFillBackground(False)
         #-self.kor.setFrameShape(QtWidgets.QFrame.StyledPanel)
