@@ -26,9 +26,9 @@ class StarWars(QMainWindow):
         #self.spaceship.setGeometry(self.x_ss, self.y_ss, 50, 50)
 
         self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))
-
-        self.spaceship.setStyleSheet("background-color: red")
-
+        self.spaceship.setStyleSheet("background-image: url(test_spaceship_v2.png);")
+        #self.spaceship.setStyleSheet("background-color: red")
+        #self.spaceship.setStyleSheet("background-image: url(:/truck/test_spaceship_v2.png)")
         #self.spaceship.setStyleSheet("background-image: url(:/truck/test_spaceship_v2.png);background-repeat: no-repeat; ")
 
         self.show()
