@@ -6,7 +6,6 @@ from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor, QPixmap
 
 
-
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
