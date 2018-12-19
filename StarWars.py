@@ -9,26 +9,33 @@ from PyQt5.QtGui import QPainter, QColor, QPixmap
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.testBot = Bots(0, 0)
+        self.testBot = Bots(0, 0, 0, 0)
 
-        self.BotMas = [[Bots(75, -50), Bots(175, -50), Bots(275, -50),
-                        Bots(475, -50), Bots(575, -50),
-                        Bots(675, -50), True],
-                       [Bots(75, -50), Bots(175, -50), Bots(275, -50),
-                        Bots(475, -50), Bots(575, -50),
-                        Bots(675, -50), False],
-                       [Bots(75, -50), Bots(175, -50), Bots(275, -50),
-                        Bots(475, -50), Bots(575, -50),
-                        Bots(675, -50), False],
-                       [Bots(75, -50), Bots(175, -50), Bots(275, -50),
-                        Bots(475, -50), Bots(575, -50),
-                        Bots(675, -50), False],
-                       [Bots(75, -50), Bots(175, -50), Bots(275, -50),
-                        Bots(475, -50), Bots(575, -50),
-                        Bots(675, -50), False],
-                       [Bots(75, -50), Bots(175, -50), Bots(275, -50),
-                        Bots(475, -50), Bots(575, -50),
-                        Bots(675, -50), False]]
+        self.BotMas = [[Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
+                        Bots(275, -50, 0, 2),
+                        Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
+                        Bots(675, -50, 0, 5), False],
+                       [Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
+                        Bots(275, -50, 0, 2),
+                        Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
+                        Bots(675, -50, 0, 5), False],
+                       [Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
+                        Bots(275, -50, 0, 2),
+                        Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
+                        Bots(675, -50, 0, 5), False],
+                       [Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
+                        Bots(275, -50, 0, 2),
+                        Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
+                        Bots(675, -50, 0, 5), False],
+                       [Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
+                        Bots(275, -50, 0, 2),
+                        Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
+                        Bots(675, -50, 0, 5), False],
+                       [Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
+                        Bots(275, -50, 0, 2),
+                        Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
+                        Bots(675, -50, 0, 5), False]
+                       ]
 
         self.shooting_bots = QBasicTimer()  # Таймеры для ботов
         self.moving_bots = QBasicTimer()
@@ -50,11 +57,12 @@ class StarWars(QMainWindow):
         self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))  # Накладываем на фрейм картинку корабля
         self.spaceship.setStyleSheet("background-image: url(test_spaceship_v2.png);")
 
-        self.shooting_bots.start(2000, self)
+        self.shooting_bots.start(2500, self)
         self.moving_bots.start(5000, self)
-        self.creating_bots.start(15000, self)  # Респавн ботов #################################################
+        self.creating_bots.start(20000, self)  # Респавн ботов #################################################
 
         self.show()  # Создаем окно игры
+        self.respawnBots()
 
     def shoot_ss(self):
         print('fire ss!')
@@ -69,13 +77,57 @@ class StarWars(QMainWindow):
         label.setPixmap(stars)
 
     def respawnBots(self):  # Респавн ботов, вызывается когда боты умирают
-        pass
+        respawned = False
+        for i in range(6):
+            if not self.BotMas[i][6]:
+                self.BotMas[i][6] = True  # Added = True
+                respawned = True
+                break
+        if respawned:
+            for i in range(100):  # Увеличивает "y" всех живых ботов на 100
+                for g in range(6):
+                    if self.BotMas[g][6]:
+                        self.respawnHelp(g)
+                    self.repaint()
+
+    def respawnHelp(self, idd):
+        if self.BotMas[idd][0].alive:
+            self.BotMas[idd][0].y += 1
+        if self.BotMas[idd][1].alive:
+            self.BotMas[idd][1].y += 1
+        if self.BotMas[idd][2].alive:
+            self.BotMas[idd][2].y += 1
+        if self.BotMas[idd][3].alive:
+            self.BotMas[idd][3].y += 1
+        if self.BotMas[idd][4].alive:
+            self.BotMas[idd][4].y += 1
+        if self.BotMas[idd][5].alive:
+            self.BotMas[idd][5].y += 1
+        # Изменения координат фреймов ##############################################################################
+
+    def deadBot(self, id1, id2):  # Умертление бота, проверка колва живых ботов
+        self.BotMas[id1][id2].alive = False
+        self.BotMas[id1][id2].x = self.BotMas[id1][id2].start_x
+        self.BotMas[id1][id2].y = -50
+        # ОТНОСИМ ФРЕЙМ НАЗАД НА РЕСП БОТОВ ########################################################################
+        self.repaint()
+        add = False
+        for i in range(6):
+            if self.BotMas[id1][i].alive:
+                add = True
+                break
+        self.BotMas[id1][6] = add
+        if not add:  # Формально возвращаем их к жизни на их респавне
+            for i in self.BotMas[id1]:
+                i.alive = True
 
     def timerEvent(self, event):
         if event.timerId() == self.shooting_bots.timerId():  # Стрельба бота
             self.testBot.shoot()
         elif event.timerId() == self.moving_bots.timerId():  # Маневрирование бота
             self.testBot.moving()
+        elif event.timerId() == self.creating_bots.timerId():
+            self.respawnBots()
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
@@ -118,7 +170,9 @@ class StarWars(QMainWindow):
 
 
 class Bots:
-    def __init__(self, x, y):
+    def __init__(self, x, y, id1, id2):
+        self.id = (id1, id2)
+        self.start_x = x
         self.x = x  # Координаты корабля бота
         self.y = y
         self.alive = True  # Жив ли бот
@@ -141,14 +195,14 @@ class Bots:
                             for k in range(50):
                                 ex.BotMas[i][g].x += 1
                                 # ИЗМЕНЕНИЯ КООРДИНАТ ФРЕЙМОВ ##########################################################################################
-                                #ex.repaint()
+                                ex.repaint()
                             print('remove bot')
                         else:
                             ex.BotMas[i][g].move = True
                             for k in range(50):
                                 ex.BotMas[i][g].x -= 1
                                 # ИЗМЕНЕНИЯ КООРДИНАТ ФРЕЙМОВ ##########################################################################################
-                                #ex.repaint()
+                                ex.repaint()
                             print('move bot')
 
 
