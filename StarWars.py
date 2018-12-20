@@ -57,12 +57,12 @@ class StarWars(QMainWindow):
         self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))  # Накладываем на фрейм картинку корабля
         self.spaceship.setStyleSheet("background-image: url(test_spaceship_v2.png);")
 
-        self.shooting_bots.start(2500, self)
-        self.moving_bots.start(5000, self)
+        self.shooting_bots.start(25000, self)
+        self.moving_bots.start(50000, self)
         self.creating_bots.start(20000, self)  # Респавн ботов #################################################
 
-        self.show()  # Создаем окно игры
         self.respawnBots()
+        self.show()
 
     def shoot_ss(self):
         print('fire ss!')
@@ -132,9 +132,10 @@ class StarWars(QMainWindow):
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
-        self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
+        self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
 
     def keyPressEvent(self, event):
+
         if event.key() == Qt.Key_W:
             if self.y_ss > 0:
                 for i in range(6):
@@ -160,6 +161,7 @@ class StarWars(QMainWindow):
                 self.spaceship.move(self.x_ss, self.y_ss)
                 self.repaint()
 
+
         if event.key() == Qt.Key_D:
             if self.x_ss < 700:
                 for i in range(6):
@@ -167,6 +169,12 @@ class StarWars(QMainWindow):
                 self.y_ss = self.y_ss
                 self.spaceship.move(self.x_ss, self.y_ss)
                 self.repaint()
+
+        if event.key() == Qt.Key_Space:
+            self.snaryad = Shell_ss(self, self.x_ss, self.y_ss, 1)
+            self.snaryad.show()
+
+            print("draw")
 
 
 class Bots:
@@ -204,6 +212,17 @@ class Bots:
                                 # ИЗМЕНЕНИЯ КООРДИНАТ ФРЕЙМОВ ##########################################################################################
                                 ex.repaint()
                             print('move bot')
+
+
+class Shell_ss(QFrame):
+    def __init__(self, form, x, y, type_shell):
+        super().__init__(form)
+        self.x = x + 25
+        self.y = y + 1
+        self.type_shell = type_shell
+        print(13414)
+        self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
+        self.setStyleSheet("background-color: red")
 
 
 app = QApplication(sys.argv)
