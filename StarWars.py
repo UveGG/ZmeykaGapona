@@ -10,7 +10,7 @@ class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
         self.testBot = Bots(0, 0, 0, 0)
-
+        self.shell_ss = []
         self.BotMas = [[Bots(75, -50, 0, 0), Bots(175, -50, 0, 1),
                         Bots(275, -50, 0, 2),
                         Bots(475, -50, 0, 3), Bots(575, -50, 0, 4),
@@ -39,6 +39,7 @@ class StarWars(QMainWindow):
 
         self.shooting_bots = QBasicTimer()  # Таймеры для ботов
         self.moving_bots = QBasicTimer()
+        self.move_shell = QBasicTimer()
 
         self.creating_bots = QBasicTimer()  # Респавн ботов  #######################################################
 
@@ -60,7 +61,7 @@ class StarWars(QMainWindow):
         self.shooting_bots.start(25000, self)
         self.moving_bots.start(50000, self)
         self.creating_bots.start(20000, self)  # Респавн ботов #################################################
-
+        self.move_shell.start(200, self)
         self.respawnBots()
         self.show()
 
@@ -122,12 +123,20 @@ class StarWars(QMainWindow):
                 i.alive = True
 
     def timerEvent(self, event):
+
         if event.timerId() == self.shooting_bots.timerId():  # Стрельба бота
             self.testBot.shoot()
         elif event.timerId() == self.moving_bots.timerId():  # Маневрирование бота
             self.testBot.moving()
         elif event.timerId() == self.creating_bots.timerId():
             self.respawnBots()
+        elif event.timerId == self.move_shell.timerId():
+            for u in len(self.shell_ss):
+                self.shell_ss[u].mover()
+                self.repaint()
+
+
+
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
@@ -173,6 +182,8 @@ class StarWars(QMainWindow):
         if event.key() == Qt.Key_Space:
             self.snaryad = Shell_ss(self, self.x_ss, self.y_ss, 1)
             self.snaryad.show()
+            self.shell_ss.append(self.snaryad)
+
 
             print("draw")
 
@@ -220,9 +231,14 @@ class Shell_ss(QFrame):
         self.x = x + 25
         self.y = y + 1
         self.type_shell = type_shell
-        print(13414)
+
         self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
         self.setStyleSheet("background-color: red")
+
+    def mover(self):
+        self.x += 5
+        self.move(self.x, self.y)
+        print(228)
 
 
 app = QApplication(sys.argv)
