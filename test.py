@@ -9,7 +9,6 @@ from PyQt5.QtGui import QPainter, QColor, QPixmap
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.main_menue()  # Создаем меню
         self.testBot = Bots(0, -50, -200, -200, QFrame(self), self)
         self.shell_ss = []
         self.BotMas = [[Bots(75, -50, 0, 0, QFrame(self), self),
@@ -56,6 +55,16 @@ class StarWars(QMainWindow):
 
         self.creating_bots = QBasicTimer()  # Респавн ботов
 
+        self.ss_typ = 'spaceship_1.png'  # Типы кораблей
+
+        self.main_menue()  # Создаем меню (Рабочее)
+        self.ship.clicked.connect(self.menue_ship())  # Нажималка на лейблы (нерабочее)
+        self.start.clicked.connect(self.menue_start())
+        self.reset.clicked.connect(self.menue_reset())
+        self.game_started = False
+        while not self.game_started:
+            a = 1
+
         self.initUI()
 
     def initUI(self):
@@ -72,11 +81,11 @@ class StarWars(QMainWindow):
         self.y_ss = 700
 
         self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))  # Накладываем на фрейм картинку корабля
-        self.spaceship.setStyleSheet("background-image: url(spaceship_1.png);")
+        self.spaceship.setStyleSheet("background-image: url(" + self.ss_typ + ");")
 
         self.shooting_bots.start(2500, self)
         self.moving_bots.start(7500, self)
-        self.creating_bots.start(20000, self)  # Респавн ботов #################################################
+        self.creating_bots.start(20000, self)  # Респавн ботов
         self.move_shell.start(200, self)
         self.respawnBots()
         self.show()
@@ -105,6 +114,15 @@ class StarWars(QMainWindow):
         self.start.setPixmap(QPixmap('start.jpg'))
         self.ship.setPixmap(QPixmap('ship.jpg'))
         self.reset.setPixmap(QPixmap('reset.jpg'))
+
+    def menue_start(self):
+        self.game_started = True  # Когда кораблик умрет не забудь поменять #################################################
+
+    def menue_ship(self):  # Создать менюшку выбора корабля
+        pass
+
+    def menue_reset(self):  # Сбросить очки
+        pass
 
     def fone(self, typ):  # Создали лейбл, наложили как фон
         label = QLabel(self)
@@ -148,6 +166,7 @@ class StarWars(QMainWindow):
         if self.BotMas[idd][5].alive:
             self.BotMas[idd][5].y += 1
             self.BotMas[idd][5].frame.move(self.BotMas[idd][5].x, self.BotMas[idd][5].y)
+        # Изменения координат фреймов ##############################################################################
 
     def deadBot(self, id1, id2):  # Умертление бота, проверка колва живых ботов
         self.BotMas[id1][id2].alive = False
