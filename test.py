@@ -9,6 +9,7 @@ from PyQt5.QtGui import QPainter, QColor, QPixmap
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.main_menue()  # Создаем меню (Рабочее)
         self.testBot = Bots(0, -50, -200, -200, QFrame(self), self)
         self.shell_ss = []
         self.BotMas = [[Bots(75, -50, 0, 0, QFrame(self), self),
@@ -57,8 +58,7 @@ class StarWars(QMainWindow):
 
         self.ss_typ = 'spaceship_1.png'  # Типы кораблей
 
-        self.main_menue()  # Создаем меню (Рабочее)
-        self.ship.clicked.connect(self.menue_ship())  # Нажималка на лейблы (нерабочее)
+
         self.start.clicked.connect(self.menue_start())
         self.reset.clicked.connect(self.menue_reset())
         self.game_started = False

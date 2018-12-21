@@ -77,7 +77,7 @@ class StarWars(QMainWindow):
         self.shooting_bots.start(2500, self)
         self.moving_bots.start(7500, self)
         self.creating_bots.start(20000, self)  # Респавн ботов #################################################
-        self.move_shell.start(200, self)
+        self.move_shell.start(10, self)
         self.respawnBots()
         self.show()
 
@@ -172,10 +172,12 @@ class StarWars(QMainWindow):
             self.testBot.moving()
         elif event.timerId() == self.creating_bots.timerId():
             self.respawnBots()
-        elif event.timerId == self.move_shell.timerId():
-            for u in len(self.shell_ss):
-                self.shell_ss[u].mover()
-                self.repaint()
+        elif event.timerId() == self.move_shell.timerId():
+            print(41241)
+            if len(self.shell_ss) > 0:
+                for u in range(len(self.shell_ss)):
+                    self.shell_ss[u].mover()
+                    self.repaint()
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
@@ -256,14 +258,12 @@ class Bots(QFrame):
                                 ex.BotMas[i][g].x += 1
                                 ex.BotMas[i][g].frame.move(ex.BotMas[i][g].x, ex.BotMas[i][g].y)
                                 ex.repaint()
-                            print('remove bot')
                         else:
                             ex.BotMas[i][g].move = True
                             for k in range(50):
                                 ex.BotMas[i][g].x -= 1
                                 ex.BotMas[i][g].frame.move(ex.BotMas[i][g].x, ex.BotMas[i][g].y)
                                 ex.repaint()
-                            print('move bot')
 
 
 class Shell_ss(QFrame):
@@ -277,7 +277,7 @@ class Shell_ss(QFrame):
         self.setStyleSheet("background-color: red")
 
     def mover(self):
-        self.x += 5
+        self.y -= 5
         self.move(self.x, self.y)
         print(228)
 
