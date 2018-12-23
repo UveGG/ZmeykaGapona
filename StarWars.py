@@ -1,17 +1,37 @@
 import sys
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QLabel, QWidget
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
-from PyQt5.QtGui import QPainter, QColor, QPixmap
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QLabel, QPushButton
+from PyQt5.QtCore import Qt, QBasicTimer
+from PyQt5.QtGui import QPixmap
 
 
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.snaryad = 1  # Для pep8
+
+        with open('info.txt') as f:
+            info = f.read()
+            mas = info.split()
+            self.record = mas[0]
+            self.score = 0
+            self.ss_typ = mas[1]
+
+        self.fone = QLabel(self)
+        self.fone.resize(750, 800)
+        self.fone.setPixmap(QPixmap('veider.jpg'))
+
+        self.start = QPushButton(self)
+        self.ship = QPushButton(self)  # Менюшка
+        self.reset = QPushButton(self)
+
+        self.tab = QLabel(self)  # Тоже для меню
+
         self.main_menue()  # Создаем меню
-        self.testBot = Bots(0, -50, -200, -200, QFrame(self), self)
-        self.shell_ss = []
+
+        self.testBot = Bots(0, -50, -200, -200, QFrame(self), self)  # Боты
         self.BotMas = [[Bots(75, -50, 0, 0, QFrame(self), self),
                         Bots(175, -50, 0, 1, QFrame(self), self),
                         Bots(275, -50, 0, 2, QFrame(self), self),
@@ -50,11 +70,26 @@ class StarWars(QMainWindow):
                         Bots(675, -50, 0, 5, QFrame(self), self), False]
                        ]
 
+        self.spaceship = QFrame(self)  # Создаём фрейм с кординатами x_ss и y_ss
+        self.x_ss = 350
+        self.y_ss = 700
+
+        self.shell_ss = []
+        self.shell_bots = []  # Главный кораблик
+        self.hp_ss = 100
+
         self.shooting_bots = QBasicTimer()  # Таймеры для ботов
         self.moving_bots = QBasicTimer()
         self.move_shell = QBasicTimer()
-
         self.creating_bots = QBasicTimer()  # Респавн ботов
+
+        self.ship1 = QPushButton(self)
+        self.ship2 = QPushButton(self)  # Для меню
+        self.ship3 = QPushButton(self)
+
+        self.ship1.hide()
+        self.ship2.hide()
+        self.ship3.hide()
 
         self.initUI()
 
@@ -63,36 +98,10 @@ class StarWars(QMainWindow):
         self.resize(750, 800)  # Размеры окна
         self.center()  # Центрируем игру
 
-        for id1 in range(6):
-            for id2 in range(6):
-                self.BotMas[id1][id2].frame.show()
-
-        self.spaceship = QFrame(self)  # Создаём фрейм с кординатами x_ss и y_ss
-        self.x_ss = 350
-        self.y_ss = 700
-
-        self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))  # Накладываем на фрейм картинку корабля
-        self.spaceship.setStyleSheet("background-image: url(spaceship_1.png);")
-
-        self.shooting_bots.start(2500, self)
-        self.moving_bots.start(7500, self)
-        self.creating_bots.start(20000, self)  # Респавн ботов #################################################
-        self.move_shell.start(10, self)
-        self.respawnBots()
-        self.show()
-
-    def shoot_ss(self):
-        print('fire ss!')
-
-    def shoot_bots(self, x, y):
-        print('fire bot!')
-
     def main_menue(self):
-        self.fone(2)  # Постановка фона меню
 
-        self.start = QLabel(self)
-        self.ship = QLabel(self)
-        self.reset = QLabel(self)
+        self.tab.resize(100, 50)
+        self.tab.setText(self.record)
 
         self.start.resize(200, 50)
         self.ship.resize(200, 50)
@@ -102,18 +111,113 @@ class StarWars(QMainWindow):
         self.ship.move(525, 475)
         self.reset.move(25, 475)
 
-        self.start.setPixmap(QPixmap('start.jpg'))
-        self.ship.setPixmap(QPixmap('ship.jpg'))
-        self.reset.setPixmap(QPixmap('reset.jpg'))
+        self.start.setStyleSheet("background-image: url(start.jpg);")
+        self.ship.setStyleSheet("background-image: url(ship.jpg);")
+        self.reset.setStyleSheet("background-image: url(reset.jpg);")
 
-    def fone(self, typ):  # Создали лейбл, наложили как фон
-        label = QLabel(self)
-        label.resize(750, 800)
-        if typ == 1:
-            background = QPixmap('stars.jpg')
-        else:
-            background = QPixmap('veider.jpg')
-        label.setPixmap(background)
+        self.start.clicked.connect(self.menue_start)
+        self.reset.clicked.connect(self.menue_reset)
+        self.ship.clicked.connect(self.menue_ship)
+
+    def menue_start(self):
+        self.fone.setPixmap(QPixmap('stars.jpg'))
+        self.reset.hide()
+        self.start.hide()
+        self.ship.hide()
+
+        for id1 in range(6):
+            for id2 in range(6):
+                self.BotMas[id1][id2].frame.show()
+
+        self.spaceship.setGeometry(QtCore.QRect(self.x_ss, self.y_ss, 50, 50))
+        self.spaceship.setStyleSheet("background-image: url(" + self.ss_typ + ");")
+        self.repaint()
+
+        self.shooting_bots.start(4500, self)
+        self.moving_bots.start(9500, self)
+        self.creating_bots.start(20000, self)  # Респавн ботов
+        self.move_shell.start(10, self)
+        self.respawnBots()
+
+    def menue_reset(self):
+        with open('info.txt', mode='w') as f:
+            f.write('0 \n' + self.ss_typ)
+        self.tab.setText('0')
+
+    def menue_ship(self):
+        self.reset.hide()
+        self.start.hide()
+        self.ship.hide()
+
+        self.ship1.resize(50, 50)
+        self.ship2.resize(50, 50)
+        self.ship3.resize(50, 50)
+
+        self.ship1.move(100, 475)
+        self.ship2.move(345, 475)
+        self.ship3.move(575, 475)
+
+        self.ship1.setStyleSheet("background-image: url(spaceship_1.png);")
+        self.ship2.setStyleSheet("background-image: url(spaceship_2.png);")
+        self.ship3.setStyleSheet("background-image: url(spaceship_3.png);")
+
+        self.ship1.clicked.connect(self.choose1)
+        self.ship2.clicked.connect(self.choose2)
+        self.ship3.clicked.connect(self.choose3)
+
+        self.ship1.show()
+        self.ship2.show()
+        self.ship3.show()
+
+    def choose1(self):
+        self.ss_typ = "spaceship_1.png"
+
+        with open('info.txt', mode='w') as f:
+            f.write(self.record + '\n' + self.ss_typ)
+
+        self.ship1.hide()
+        self.ship2.hide()
+        self.ship3.hide()
+
+        self.reset.show()
+        self.start.show()
+        self.ship.show()
+
+    def choose2(self):
+        self.ss_typ = 'spaceship_2.png'
+
+        with open('info.txt', mode='w') as f:
+            f.write(self.record + '\n' + self.ss_typ)
+
+        self.ship1.hide()
+        self.ship2.hide()
+        self.ship3.hide()
+
+        self.reset.show()
+        self.start.show()
+        self.ship.show()
+
+    def choose3(self):
+        self.ss_typ = 'spaceship_3.png'
+
+        with open('info.txt', mode='w') as f:
+            f.write(self.record + '\n' + self.ss_typ)
+
+        self.ship1.hide()
+        self.ship2.hide()
+        self.ship3.hide()
+
+        self.reset.show()
+        self.start.show()
+        self.ship.show()
+
+    def shoot_ss(self):
+        print('fire ss!')
+
+    def shoot_bots(self, x, y):
+        self.snaryad_b = Shell_bots(self, x, y, 1)
+        self.snaryad_b.show()
+        self.shell_ss.append(self.snaryad_b)
 
     def respawnBots(self):  # Респавн ботов, вызывается когда боты умирают
         respawned = False
@@ -126,28 +230,12 @@ class StarWars(QMainWindow):
             for i in range(100):  # Увеличивает "y" всех живых ботов на 100
                 for g in range(6):
                     if self.BotMas[g][6]:
-                        self.respawnHelp(g)
-                    self.repaint()
+                        for j in range(6):
+                            if self.BotMas[g][j].alive:
+                                self.BotMas[g][j].y += 1
+                                self.BotMas[g][j].frame.move(self.BotMas[g][j].x, self.BotMas[g][j].y)
 
-    def respawnHelp(self, idd):
-        if self.BotMas[idd][0].alive:
-            self.BotMas[idd][0].y += 1
-            self.BotMas[idd][0].frame.move(self.BotMas[idd][0].x, self.BotMas[idd][0].y)
-        if self.BotMas[idd][1].alive:
-            self.BotMas[idd][1].y += 1
-            self.BotMas[idd][1].frame.move(self.BotMas[idd][1].x, self.BotMas[idd][1].y)
-        if self.BotMas[idd][2].alive:
-            self.BotMas[idd][2].y += 1
-            self.BotMas[idd][2].frame.move(self.BotMas[idd][2].x, self.BotMas[idd][2].y)
-        if self.BotMas[idd][3].alive:
-            self.BotMas[idd][3].y += 1
-            self.BotMas[idd][3].frame.move(self.BotMas[idd][3].x, self.BotMas[idd][3].y)
-        if self.BotMas[idd][4].alive:
-            self.BotMas[idd][4].y += 1
-            self.BotMas[idd][4].frame.move(self.BotMas[idd][4].x, self.BotMas[idd][4].y)
-        if self.BotMas[idd][5].alive:
-            self.BotMas[idd][5].y += 1
-            self.BotMas[idd][5].frame.move(self.BotMas[idd][5].x, self.BotMas[idd][5].y)
+                    self.repaint()
 
     def deadBot(self, id1, id2):  # Умертление бота, проверка колва живых ботов
         self.BotMas[id1][id2].alive = False
@@ -172,12 +260,18 @@ class StarWars(QMainWindow):
             self.testBot.moving()
         elif event.timerId() == self.creating_bots.timerId():
             self.respawnBots()
+
         elif event.timerId() == self.move_shell.timerId():
-            print(41241)
+
             if len(self.shell_ss) > 0:
                 for u in range(len(self.shell_ss)):
                     self.shell_ss[u].mover()
                     self.repaint()
+
+                for j in range(len(self.shell_ss)):
+                    if self.shell_ss[j].stats_y() <= 10:
+                        self.shell_ss[j].d_f()
+                        self.repaint()
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
@@ -215,6 +309,7 @@ class StarWars(QMainWindow):
             if self.x_ss < 700:
                 for i in range(6):
                     self.x_ss = self.x_ss + 1
+
                 self.y_ss = self.y_ss
                 self.spaceship.move(self.x_ss, self.y_ss)
                 self.repaint()
@@ -223,12 +318,12 @@ class StarWars(QMainWindow):
             self.snaryad = Shell_ss(self, self.x_ss, self.y_ss, 1)
             self.snaryad.show()
             self.shell_ss.append(self.snaryad)
-            print("draw")
 
 
 class Bots(QFrame):
     def __init__(self, x, y, id1, id2, frame, form):
         super().__init__(form)
+
         self.id = (id1, id2)
         self.frame = frame
         self.frame.setGeometry(QtCore.QRect(x, y, 50, 50))
@@ -276,10 +371,36 @@ class Shell_ss(QFrame):
         self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
         self.setStyleSheet("background-color: red")
 
+    def stats_y(self):
+        return self.y
+
+    def d_f(self):
+        self.itemFrame.Destroy()
+
     def mover(self):
         self.y -= 5
         self.move(self.x, self.y)
-        print(228)
+
+
+class Shell_bots(QFrame):
+    def __init__(self, form, x, y, type_shell):
+        super().__init__(form)
+        self.x = x + 25
+        self.y = y + 51
+        self.type_shell = type_shell
+
+        self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
+        self.setStyleSheet("background-color: red")
+
+    def stats_y(self):
+        return self.y
+
+    def d_f(self):
+        self.itemFrame.Destroy()
+
+    def mover(self):
+        self.y += 5
+        self.move(self.x, self.y)
 
 
 app = QApplication(sys.argv)
