@@ -317,21 +317,29 @@ class StarWars(QMainWindow):
 # -------------------------------------
             if len(self.shell_ss) > 0:
 
-                for j in range(len(self.shell_ss)):
+                for g in range(len(self.shell_ss)):
+                    print(-1)
+                    for i in range(6):
+                        for g in range(6):
+                            print(0)
 
-                    for i in ex.BotMas:
-
-                        self.A1_ss = (int(self.shell_ss[j].stats_y()) - int(i.y + 25)) ** 2
-
-                        self.A2_ss = (int(self.shell_ss[j].stats_x()) - int(i.x + 25)) ** 2
-                        self.d_ss = (self.A1_bots + self.A2_bots) ** 0.5
-                        self.R_ss = 25 + 8 + 3
-                        #print(self.R_bots, self.d_bots)
-                        if self.d_ss <= self.R_ss:
-                            if self.shell_ss[j].hit() == 0:
-                                print(228)
-                                #тут должен быть бот deat
-                                self.shell_ss[j].d_f()
+                            self.x_e = int(self.BotMas[i][g].x)
+                            self.y_e = int(self.BotMas[i][g].y)
+                            print(1)
+                            print(self.x_e, self.y_e)
+                            self.A1_ss = (int(self.shell_ss[g].stats_y()) - int(self.y_e + 25)) ** 2
+                            print(2)
+                            self.A2_ss = (int(self.shell_ss[g].stats_x()) - int(self.x_e + 25)) ** 2
+                            print(3)
+                            self.d_ss = (self.A1_ss + self.A2_ss) ** 0.5
+                            print(4)
+                            self.R_ss = 25 + 8 + 3
+                            #print(self.R_bots, self.d_bots)
+                            if self.d_ss <= self.R_ss:
+                                if self.shell_ss[j].hit() == 0:
+                                    print(228)
+                                    #тут должен быть бот deat
+                                    self.shell_ss[j].d_f()
 # -------------------------------------------------------------
 
     def center(self):  # Центрируем игру
