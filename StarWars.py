@@ -271,6 +271,7 @@ class StarWars(QMainWindow):
                 for j in range(len(self.shell_ss)):
                     if self.shell_ss[j].stats_y() <= 10:
                         self.shell_ss[j].d_f()
+                        #del self.shell_ss[j]
                         self.repaint()
 
     def center(self):  # Центрируем игру
@@ -314,10 +315,10 @@ class StarWars(QMainWindow):
                 self.spaceship.move(self.x_ss, self.y_ss)
                 self.repaint()
 
-        if event.key() == Qt.Key_Space:
-            self.snaryad = Shell_ss(self, self.x_ss, self.y_ss, 1)
-            self.snaryad.show()
-            self.shell_ss.append(self.snaryad)
+        if event.key() == Qt.Key_F:
+            self.snaryad_ss = Shell_ss(self, self.x_ss, self.y_ss, 1)
+            self.snaryad_ss.show()
+            self.shell_ss.append(self.snaryad_ss)
 
 
 class Bots(QFrame):
@@ -375,7 +376,7 @@ class Shell_ss(QFrame):
         return self.y
 
     def d_f(self):
-        self.itemFrame.Destroy()
+        self.move(1, 1)
 
     def mover(self):
         self.y -= 5
