@@ -299,15 +299,37 @@ class StarWars(QMainWindow):
         elif event.timerId() == self.shell_registr.timerId():
 
             if len(self.shell_bots) > 0:
+
                 for j in range(len(self.shell_bots)):
-                    self.A1_bots = (int(self.y_ss + 25) - int(self.shell_bots[j].stats_y)) ** 2
-                    self.A2_bots = (int(self.x_ss + 25) - int(self.shell_bots[j].stats_x)) ** 2
+
+                    self.A1_bots = (int(self.y_ss + 25) - int(self.shell_bots[j].stats_y())) ** 2
+
+                    self.A2_bots = (int(self.x_ss + 25) - int(self.shell_bots[j].stats_x())) ** 2
                     self.d_bots = (self.A1_bots + self.A2_bots) ** 0.5
                     self.R_bots = 25 + 8 + 3
-                    print(self.R_bots, self.d_bots)
+                    #print(self.R_bots, self.d_bots)
                     if self.d_bots <= self.R_bots:
-                        self.hp_ss -= 10
-                        self.shell_bots[j].d_f()
+                        if self.shell_bots[j].hit() == 0:
+                            self.hp_ss -= 10
+                            print('Sergii pidor', self.hp_ss)
+                            self.shell_bots[j].d_f()
+
+
+            #if len(self.shell_ss) > 0:
+
+            #    for j in range(len(self.shell_ss)):
+
+            #        self.A1_ss = (int(self.y_ss + 25) - int(self.shell_bots[j].stats_y())) ** 2
+            #
+            #        self.A2_ss = (int(self.x_ss + 25) - int(self.shell_bots[j].stats_x())) ** 2
+            #        self.d_ss = (self.A1_bots + self.A2_bots) ** 0.5
+            #        self.R_ss = 25 + 8 + 3
+            #        #print(self.R_bots, self.d_bots)
+            #        if self.d_bots <= self.R_bots:
+            #            if self.shell_bots[j].hit() == 0:
+            #                self.hp_ss -= 10
+            #                print('Sergii pidor', self.hp_ss)
+            #                self.shell_ss[j].d_f()
 
 
     def center(self):  # Центрируем игру
@@ -405,6 +427,7 @@ class Shell_ss(QFrame):
         self.y = y + 1
         self.type_shell = type_shell
         self.dont_move = 0
+        self.hitt = 0
         self.setGeometry(QtCore.QRect(self.x, self.y, 3, 3))
         self.setStyleSheet("background-color: red")
 
@@ -414,10 +437,14 @@ class Shell_ss(QFrame):
     def stats_x(self):
         return self.x
 
+    def hit(self):
+        return self.hitt
+
     def d_f(self):
         self.move(1, 1)
         self.hide()
         self.dont_move = 1
+        self.hitt = 1
 
     def mover(self):
         if self.dont_move == 0:
@@ -432,6 +459,7 @@ class Shell_bots(QFrame):
         self.y = y + 51
         self.type_shell = type_shell
         self.dont_move = 0
+        self.hitt = 0
         self.setGeometry(QtCore.QRect(self.x, self.y, 3, 3))
         self.setStyleSheet("background-color: red")
 
@@ -441,9 +469,13 @@ class Shell_bots(QFrame):
     def stats_x(self):
         return self.x
 
+    def hit(self):
+        return self.hitt
+
     def d_f(self):
         self.move(1, 1)
         self.hide()
+        self.hitt = 1
         self.dont_move = 1
 
     def mover(self):
