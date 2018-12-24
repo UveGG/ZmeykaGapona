@@ -296,8 +296,19 @@ class StarWars(QMainWindow):
                         self.shell_bots[j].d_f()
                         self.repaint()
 
-            elif event.timerId() == self.shell_registr.timerId():
-                
+        elif event.timerId() == self.shell_registr.timerId():
+
+            if len(self.shell_bots) > 0:
+                for j in range(len(self.shell_bots)):
+                    self.A1_bots = (int(self.y_ss + 25) - int(self.shell_bots[j].stats_y)) ** 2
+                    self.A2_bots = (int(self.x_ss + 25) - int(self.shell_bots[j].stats_x)) ** 2
+                    self.d_bots = (self.A1_bots + self.A2_bots) ** 0.5
+                    self.R_bots = 25 + 8 + 3
+                    print(self.R_bots, self.d_bots)
+                    if self.d_bots <= self.R_bots:
+                        self.hp_ss -= 10
+                        self.shell_bots[j].d_f()
+
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
