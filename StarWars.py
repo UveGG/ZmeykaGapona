@@ -211,13 +211,14 @@ class StarWars(QMainWindow):
         self.start.show()
         self.ship.show()
 
-    def shoot_ss(self):
-        print('fire ss!')
+    #def shoot_ss(self):
+    #    print('fire ss!')
 
     def shoot_bots(self, x, y):
         self.snaryad_b = Shell_bots(self, x, y, 1)
+
+        self.shell_bots.append(self.snaryad_b)
         self.snaryad_b.show()
-        self.shell_ss.append(self.snaryad_b)
 
     def respawnBots(self):  # Респавн ботов, вызывается когда боты умирают
         respawned = False
@@ -273,6 +274,23 @@ class StarWars(QMainWindow):
                         self.shell_ss[j].d_f()
                         #del self.shell_ss[j]
                         self.repaint()
+
+
+
+                for u in range(len(self.shell_bots)):
+                    self.shell_bots[u].mover()
+                    self.repaint()
+                for j in range(len(self.shell_bots)):
+
+                    #self.d_bots =
+                    if self.shell_bots[j].stats_y() >= 800:
+                        self.shell_bots[j].d_f()
+                        #del self.shell_ss[j]
+                        self.repaint()
+
+
+
+
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
@@ -368,19 +386,25 @@ class Shell_ss(QFrame):
         self.x = x + 25
         self.y = y + 1
         self.type_shell = type_shell
-
-        self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
+        self.dont_move = 0
+        self.setGeometry(QtCore.QRect(self.x, self.y, 3, 3))
         self.setStyleSheet("background-color: red")
 
     def stats_y(self):
         return self.y
 
+    def stats_x(self):
+        return self.x
+
     def d_f(self):
         self.move(1, 1)
+        self.dont_move = 1
+
 
     def mover(self):
-        self.y -= 5
-        self.move(self.x, self.y)
+        if self.dont_move == 0:
+            self.y -= 5
+            self.move(self.x, self.y)
 
 
 class Shell_bots(QFrame):
@@ -389,19 +413,25 @@ class Shell_bots(QFrame):
         self.x = x + 25
         self.y = y + 51
         self.type_shell = type_shell
-
-        self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
+        self.dont_move = 0
+        self.setGeometry(QtCore.QRect(self.x, self.y, 3, 3))
         self.setStyleSheet("background-color: red")
 
     def stats_y(self):
         return self.y
 
+    def stats_x(self):
+        return self.x
+
     def d_f(self):
-        self.itemFrame.Destroy()
+        self.move(1, 1)
+        self.dont_move = 1
+
 
     def mover(self):
-        self.y += 5
-        self.move(self.x, self.y)
+        if self.dont_move == 0:
+            self.y += 5
+            self.move(self.x, self.y)
 
 
 app = QApplication(sys.argv)

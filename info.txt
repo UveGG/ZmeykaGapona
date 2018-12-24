@@ -1,2 +1,2 @@
 0
-spaceship_2.png
+spaceship_1.png
