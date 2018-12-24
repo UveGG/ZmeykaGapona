@@ -84,6 +84,7 @@ class StarWars(QMainWindow):
         self.shooting_bots = QBasicTimer()  # Таймеры для ботов
         self.moving_bots = QBasicTimer()
         self.move_shell = QBasicTimer()
+        self.shell_registr = QBasicTimer()
         self.creating_bots = QBasicTimer()  # Респавн ботов
 
         self.ship1 = QPushButton(self)
@@ -143,6 +144,7 @@ class StarWars(QMainWindow):
         self.moving_bots.start(12000, self)
         self.creating_bots.start(30000, self)  # Респавн ботов
         self.move_shell.start(10, self)
+        self.shell_registr.start(15, self)
         self.respawnBots()
 
     def menue_reset(self):
@@ -293,6 +295,9 @@ class StarWars(QMainWindow):
                     if self.shell_bots[j].stats_y() >= 800:
                         self.shell_bots[j].d_f()
                         self.repaint()
+
+            elif event.timerId() == self.shell_registr.timerId():
+                
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
