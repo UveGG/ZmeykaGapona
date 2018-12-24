@@ -3,14 +3,17 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QLabel, QPushButton
 from PyQt5.QtCore import Qt, QBasicTimer
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 
 
 class StarWars(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.snaryad_b = 1
+        self.snaryad_ss = 1
         self.snaryad = 1  # Для pep8
+        self.now_score = 10
 
         with open('info.txt') as f:
             info = f.read()
@@ -99,9 +102,11 @@ class StarWars(QMainWindow):
         self.center()  # Центрируем игру
 
     def main_menue(self):
-
-        self.tab.resize(100, 50)
+        self.tab.move(30, 10)
+        self.tab.resize(720, 100)
         self.tab.setText(self.record)
+        self.tab.setFont(QFont('SansSerif', 45))
+        self.tab.setStyleSheet("color: rgb(255, 255, 0);")
 
         self.start.resize(200, 50)
         self.ship.resize(200, 50)
@@ -120,6 +125,7 @@ class StarWars(QMainWindow):
         self.ship.clicked.connect(self.menue_ship)
 
     def menue_start(self):
+        self.tab.setText(str(self.now_score))
         self.fone.setPixmap(QPixmap('stars.jpg'))
         self.reset.hide()
         self.start.hide()
@@ -133,9 +139,9 @@ class StarWars(QMainWindow):
         self.spaceship.setStyleSheet("background-image: url(" + self.ss_typ + ");")
         self.repaint()
 
-        self.shooting_bots.start(4500, self)
-        self.moving_bots.start(9500, self)
-        self.creating_bots.start(20000, self)  # Респавн ботов
+        self.shooting_bots.start(6000, self)
+        self.moving_bots.start(12000, self)
+        self.creating_bots.start(30000, self)  # Респавн ботов
         self.move_shell.start(10, self)
         self.respawnBots()
 
@@ -211,13 +217,18 @@ class StarWars(QMainWindow):
         self.start.show()
         self.ship.show()
 
-    def shoot_ss(self):
-        print('fire ss!')
+    def repaint_score(self):
+        self.now_score += 10
+        self.tab.setText(str(self.now_score))
+        self.repaint()
+        if self.now_score > int(self.record):
+            with open('info.txt', mode='w') as f:
+                f.write(str(self.now_score) + '\n' + self.ss_typ)
 
     def shoot_bots(self, x, y):
         self.snaryad_b = Shell_bots(self, x, y, 1)
+        self.shell_bots.append(self.snaryad_b)
         self.snaryad_b.show()
-        self.shell_ss.append(self.snaryad_b)
 
     def respawnBots(self):  # Респавн ботов, вызывается когда боты умирают
         respawned = False
@@ -273,6 +284,16 @@ class StarWars(QMainWindow):
                         self.shell_ss[j].d_f()
                         self.repaint()
 
+            if len(self.shell_bots) > 0:
+                for u in range(len(self.shell_bots)):
+                    self.shell_bots[u].mover()
+                    self.repaint()
+
+                for j in range(len(self.shell_bots)):
+                    if self.shell_bots[j].stats_y() >= 800:
+                        self.shell_bots[j].d_f()
+                        self.repaint()
+
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
@@ -314,10 +335,10 @@ class StarWars(QMainWindow):
                 self.spaceship.move(self.x_ss, self.y_ss)
                 self.repaint()
 
-        if event.key() == Qt.Key_Space:
-            self.snaryad = Shell_ss(self, self.x_ss, self.y_ss, 1)
-            self.snaryad.show()
-            self.shell_ss.append(self.snaryad)
+        if event.key() == Qt.Key_F:
+            self.snaryad_ss = Shell_ss(self, self.x_ss, self.y_ss, 1)
+            self.snaryad_ss.show()
+            self.shell_ss.append(self.snaryad_ss)
 
 
 class Bots(QFrame):
@@ -367,19 +388,25 @@ class Shell_ss(QFrame):
         self.x = x + 25
         self.y = y + 1
         self.type_shell = type_shell
-
-        self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
+        self.dont_move = 0
+        self.setGeometry(QtCore.QRect(self.x, self.y, 3, 3))
         self.setStyleSheet("background-color: red")
 
     def stats_y(self):
         return self.y
 
+    def stats_x(self):
+        return self.x
+
     def d_f(self):
-        self.itemFrame.Destroy()
+        self.move(1, 1)
+        self.hide()
+        self.dont_move = 1
 
     def mover(self):
-        self.y -= 5
-        self.move(self.x, self.y)
+        if self.dont_move == 0:
+            self.y -= 5
+            self.move(self.x, self.y)
 
 
 class Shell_bots(QFrame):
@@ -388,19 +415,25 @@ class Shell_bots(QFrame):
         self.x = x + 25
         self.y = y + 51
         self.type_shell = type_shell
-
-        self.setGeometry(QtCore.QRect(self.x, self.y, 2, 2))
+        self.dont_move = 0
+        self.setGeometry(QtCore.QRect(self.x, self.y, 3, 3))
         self.setStyleSheet("background-color: red")
 
     def stats_y(self):
         return self.y
 
+    def stats_x(self):
+        return self.x
+
     def d_f(self):
-        self.itemFrame.Destroy()
+        self.move(1, 1)
+        self.hide()
+        self.dont_move = 1
 
     def mover(self):
-        self.y += 5
-        self.move(self.x, self.y)
+        if self.dont_move == 0:
+            self.y += 5
+            self.move(self.x, self.y)
 
 
 app = QApplication(sys.argv)
