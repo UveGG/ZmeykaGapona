@@ -314,23 +314,25 @@ class StarWars(QMainWindow):
                             print('Sergii pidor', self.hp_ss)
                             self.shell_bots[j].d_f()
 
+# -------------------------------------
+            if len(self.shell_ss) > 0:
 
-            #if len(self.shell_ss) > 0:
+                for j in range(len(self.shell_ss)):
 
-            #    for j in range(len(self.shell_ss)):
+                    for i in ex.BotMas:
 
-            #        self.A1_ss = (int(self.y_ss + 25) - int(self.shell_bots[j].stats_y())) ** 2
-            #
-            #        self.A2_ss = (int(self.x_ss + 25) - int(self.shell_bots[j].stats_x())) ** 2
-            #        self.d_ss = (self.A1_bots + self.A2_bots) ** 0.5
-            #        self.R_ss = 25 + 8 + 3
-            #        #print(self.R_bots, self.d_bots)
-            #        if self.d_bots <= self.R_bots:
-            #            if self.shell_bots[j].hit() == 0:
-            #                self.hp_ss -= 10
-            #                print('Sergii pidor', self.hp_ss)
-            #                self.shell_ss[j].d_f()
+                        self.A1_ss = (int(self.shell_ss[j].stats_y()) - int(i.y + 25)) ** 2
 
+                        self.A2_ss = (int(self.shell_ss[j].stats_x()) - int(i.x + 25)) ** 2
+                        self.d_ss = (self.A1_bots + self.A2_bots) ** 0.5
+                        self.R_ss = 25 + 8 + 3
+                        #print(self.R_bots, self.d_bots)
+                        if self.d_ss <= self.R_ss:
+                            if self.shell_ss[j].hit() == 0:
+                                print(228)
+                                #тут должен быть бот deat
+                                self.shell_ss[j].d_f()
+# -------------------------------------------------------------
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
