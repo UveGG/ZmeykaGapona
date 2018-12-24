@@ -311,35 +311,37 @@ class StarWars(QMainWindow):
                     if self.d_bots <= self.R_bots:
                         if self.shell_bots[j].hit() == 0:
                             self.hp_ss -= 10
-                            print('Sergii pidor', self.hp_ss)
+
                             self.shell_bots[j].d_f()
 
 # -------------------------------------
             if len(self.shell_ss) > 0:
 
-                for g in range(len(self.shell_ss)):
+                for f in range(len(self.shell_ss)):
                     print(-1)
                     for i in range(6):
                         for g in range(6):
-                            print(0)
+
 
                             self.x_e = int(self.BotMas[i][g].x)
                             self.y_e = int(self.BotMas[i][g].y)
-                            print(1)
+
                             print(self.x_e, self.y_e)
-                            self.A1_ss = (int(self.shell_ss[g].stats_y()) - int(self.y_e + 25)) ** 2
-                            print(2)
-                            self.A2_ss = (int(self.shell_ss[g].stats_x()) - int(self.x_e + 25)) ** 2
-                            print(3)
+                            self.A1_ss = (int(self.shell_ss[f].stats_y()) - int(self.y_e + 25)) ** 2
+
+                            self.A2_ss = (int(self.shell_ss[f].stats_x()) - int(self.x_e + 25)) ** 2
+
                             self.d_ss = (self.A1_ss + self.A2_ss) ** 0.5
-                            print(4)
+
                             self.R_ss = 25 + 8 + 3
                             #print(self.R_bots, self.d_bots)
+                            
                             if self.d_ss <= self.R_ss:
-                                if self.shell_ss[j].hit() == 0:
-                                    print(228)
-                                    #тут должен быть бот deat
-                                    self.shell_ss[j].d_f()
+                                if self.shell_ss[f].hit() == 0:
+
+                                    self.deadBot(i, g)
+
+                                    self.shell_ss[f].d_f()
 # -------------------------------------------------------------
 
     def center(self):  # Центрируем игру
