@@ -4,6 +4,8 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QLabel, QPushButton
 from PyQt5.QtCore import Qt, QBasicTimer
 from PyQt5.QtGui import QPixmap, QFont
+from time import sleep
+from random import choice
 
 
 class StarWars(QMainWindow):
@@ -13,7 +15,10 @@ class StarWars(QMainWindow):
         self.snaryad_b = 1
         self.snaryad_ss = 1
         self.snaryad = 1  # Для pep8
-        self.now_score = 10
+        self.now_score = 0
+        self.bonus_hp = False
+        self.bonus_score = False
+        self.bonus_score2 = False
 
         with open('info.txt') as f:
             info = f.read()
@@ -79,7 +84,7 @@ class StarWars(QMainWindow):
 
         self.shell_ss = []
         self.shell_bots = []  # Главный кораблик
-        self.hp_ss = 100
+        self.hp_ss = 3
 
         self.shooting_bots = QBasicTimer()  # Таймеры для ботов
         self.moving_bots = QBasicTimer()
@@ -91,9 +96,25 @@ class StarWars(QMainWindow):
         self.ship2 = QPushButton(self)  # Для меню
         self.ship3 = QPushButton(self)
 
+        self.x_e = 1
+        self.y_e = 1
+        self.A1_ss = 1
+        self.A2_ss = 1  # Для pep8
+        self.d_ss = 1
+        self.R_ss = 25 + 8 + 3
+        self.A1_bots = 1
+        self.A2_bots = 1
+        self.d_bots = 1
+        self.R_bots = 25 + 8 + 3
+
         self.ship1.hide()
         self.ship2.hide()
         self.ship3.hide()
+
+        self.bonus = QLabel(self)
+        self.bonus.resize(50, 50)
+        self.bonus.hide()
+        self.over = QLabel(self)
 
         self.initUI()
 
@@ -219,8 +240,8 @@ class StarWars(QMainWindow):
         self.start.show()
         self.ship.show()
 
-    def repaint_score(self):
-        self.now_score += 10
+    def repaint_score(self, ir):
+        self.now_score += ir
         self.tab.setText(str(self.now_score))
         self.repaint()
         if self.now_score > int(self.record):
@@ -252,9 +273,33 @@ class StarWars(QMainWindow):
 
     def deadBot(self, id1, id2):  # Умертление бота, проверка колва живых ботов
         self.BotMas[id1][id2].alive = False
+
+        if self.bonus_hp:
+            self.bonus.move(self.BotMas[id1][id2].x, self.BotMas[id1][id2].y)
+            self.hp_ss += 1
+            self.bonus.setPixmap(QPixmap('1hp.jpg'))
+            self.bonus.show()
+
+        elif self.bonus_score:
+            self.bonus.move(self.BotMas[id1][id2].x, self.BotMas[id1][id2].y)
+            self.repaint_score(100)
+            self.bonus.setPixmap(QPixmap('bon.png'))
+            self.bonus.show()
+
+        elif self.bonus_score2:
+            self.bonus.move(self.BotMas[id1][id2].x, self.BotMas[id1][id2].y)
+            self.repaint_score(500)
+            self.bonus.setPixmap(QPixmap('bigbon.jpg'))
+            self.bonus.show()
+
+        self.bonus_score = False
+        self.bonus_score2 = False
+        self.bonus_hp = False
+
         self.BotMas[id1][id2].x = self.BotMas[id1][id2].start_x
         self.BotMas[id1][id2].y = -50
         self.BotMas[id1][id2].frame.move(ex.BotMas[id1][id2].x, -50)
+        self.repaint_score(10)
         self.repaint()
         add = False
         for i in range(6):
@@ -263,8 +308,8 @@ class StarWars(QMainWindow):
                 break
         self.BotMas[id1][6] = add
         if not add:  # Формально возвращаем их к жизни на их респавне
-            for i in self.BotMas[id1]:
-                i.alive = True
+            for i in range(6):
+                self.BotMas[id1][i].alive = True
 
     def timerEvent(self, event):
         if event.timerId() == self.shooting_bots.timerId():  # Стрельба бота
@@ -297,50 +342,45 @@ class StarWars(QMainWindow):
                         self.repaint()
 
         elif event.timerId() == self.shell_registr.timerId():
-
             if len(self.shell_bots) > 0:
-
                 for j in range(len(self.shell_bots)):
-
                     self.A1_bots = (int(self.y_ss + 25) - int(self.shell_bots[j].stats_y())) ** 2
-
                     self.A2_bots = (int(self.x_ss + 25) - int(self.shell_bots[j].stats_x())) ** 2
                     self.d_bots = (self.A1_bots + self.A2_bots) ** 0.5
                     self.R_bots = 25 + 8 + 3
-                    #print(self.R_bots, self.d_bots)
                     if self.d_bots <= self.R_bots:
                         if self.shell_bots[j].hit() == 0:
-                            self.hp_ss -= 10
-                            print('Sergii pidor', self.hp_ss)
+                            self.hp_ss -= 1
+                            if self.hp_ss == 0:
+                                self.over.resize(750, 800)
+                                self.over.setPixmap(QPixmap('game_over.jpg'))
+                                self.repaint()
+                                sleep(3)
+                                self.close()
                             self.shell_bots[j].d_f()
 
-# -------------------------------------
             if len(self.shell_ss) > 0:
-
-                for g in range(len(self.shell_ss)):
-                    print(-1)
+                for f in range(len(self.shell_ss)):
                     for i in range(6):
                         for g in range(6):
-                            print(0)
-
                             self.x_e = int(self.BotMas[i][g].x)
                             self.y_e = int(self.BotMas[i][g].y)
-                            print(1)
-                            print(self.x_e, self.y_e)
-                            self.A1_ss = (int(self.shell_ss[g].stats_y()) - int(self.y_e + 25)) ** 2
-                            print(2)
-                            self.A2_ss = (int(self.shell_ss[g].stats_x()) - int(self.x_e + 25)) ** 2
-                            print(3)
+                            self.A1_ss = (int(self.shell_ss[f].stats_y()) - int(self.y_e + 25)) ** 2
+                            self.A2_ss = (int(self.shell_ss[f].stats_x()) - int(self.x_e + 25)) ** 2
                             self.d_ss = (self.A1_ss + self.A2_ss) ** 0.5
-                            print(4)
                             self.R_ss = 25 + 8 + 3
-                            #print(self.R_bots, self.d_bots)
+
                             if self.d_ss <= self.R_ss:
-                                if self.shell_ss[j].hit() == 0:
-                                    print(228)
-                                    #тут должен быть бот deat
-                                    self.shell_ss[j].d_f()
-# -------------------------------------------------------------
+                                if self.shell_ss[f].hit() == 0:
+                                    bonus = choice([1, 2, 3, 0, 0, 0, 0, 0])
+                                    if 1 == bonus:
+                                        self.bonus_hp = True
+                                    elif 2 == bonus:
+                                        self.bonus_score = True
+                                    elif 3 == bonus:
+                                        self.bonus_score2 = True
+                                    self.deadBot(i, g)
+                                    self.shell_ss[f].d_f()
 
     def center(self):  # Центрируем игру
         screen = QDesktopWidget().screenGeometry()
@@ -384,6 +424,7 @@ class StarWars(QMainWindow):
                 self.repaint()
 
         if event.key() == Qt.Key_F:
+            self.bonus.hide()
             self.snaryad_ss = Shell_ss(self, self.x_ss, self.y_ss, 1)
             self.snaryad_ss.show()
             self.shell_ss.append(self.snaryad_ss)
