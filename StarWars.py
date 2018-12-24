@@ -318,7 +318,7 @@ class StarWars(QMainWindow):
             if len(self.shell_ss) > 0:
 
                 for f in range(len(self.shell_ss)):
-                    print(-1)
+
                     for i in range(6):
                         for g in range(6):
 
@@ -326,7 +326,7 @@ class StarWars(QMainWindow):
                             self.x_e = int(self.BotMas[i][g].x)
                             self.y_e = int(self.BotMas[i][g].y)
 
-                            print(self.x_e, self.y_e)
+
                             self.A1_ss = (int(self.shell_ss[f].stats_y()) - int(self.y_e + 25)) ** 2
 
                             self.A2_ss = (int(self.shell_ss[f].stats_x()) - int(self.x_e + 25)) ** 2
@@ -335,7 +335,7 @@ class StarWars(QMainWindow):
 
                             self.R_ss = 25 + 8 + 3
                             #print(self.R_bots, self.d_bots)
-                            
+
                             if self.d_ss <= self.R_ss:
                                 if self.shell_ss[f].hit() == 0:
 
