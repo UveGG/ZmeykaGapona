@@ -276,17 +276,22 @@ class StarWars(QMainWindow):
                         self.repaint()
 
 
-
+            if len(self.shell_bots) > 0:
                 for u in range(len(self.shell_bots)):
                     self.shell_bots[u].mover()
                     self.repaint()
                 for j in range(len(self.shell_bots)):
 
-                    #self.d_bots =
+
                     if self.shell_bots[j].stats_y() >= 800:
                         self.shell_bots[j].d_f()
-                        #del self.shell_ss[j]
+                        #del self.shell_bots[j]
                         self.repaint()
+
+                #self.A1_bots = (int(self.shell_bots[j].stats_y) - int(self.y_ss + 25)) ** 2
+                #self.A2_bots = (int(self.shell_bots[j].stats_x) - int(self.x_ss + 25)) ** 2
+                #self.d_bots = (self.A1_bots + self.A2_bots) ** 0.5
+
 
 
 
@@ -398,6 +403,7 @@ class Shell_ss(QFrame):
 
     def d_f(self):
         self.move(1, 1)
+        self.hide()
         self.dont_move = 1
 
 
@@ -425,6 +431,7 @@ class Shell_bots(QFrame):
 
     def d_f(self):
         self.move(1, 1)
+        self.hide()
         self.dont_move = 1
 
 
