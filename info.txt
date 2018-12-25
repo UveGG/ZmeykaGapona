@@ -1,2 +1,2 @@
-1160
-spaceship_3.png
+0 
+spaceship_1.png
